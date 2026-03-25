@@ -5,9 +5,37 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #f3f4f6; /* Light gray background */
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Global styles for our node inputs and dropdowns */
+.node-input, .node-select {
+  width: 100%;
+  padding: 6px 8px;
+  margin-top: 4px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 12px;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.node-input:focus, .node-select:focus {
+  outline: none;
+  border-color: #6366f1; /* Indigo focus color */
+  box-shadow: 0 0 0 1px #6366f1;
+}
+
+.node-label {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  font-weight: 500;
+  color: #4b5563;
+  margin-bottom: 8px;
 }

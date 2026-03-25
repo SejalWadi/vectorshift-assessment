@@ -1,5 +1,3 @@
-// draggableNode.js
-
 export const DraggableNode = ({ type, label }) => {
     const onDragStart = (event, nodeType) => {
       const appData = { nodeType }
@@ -16,18 +14,23 @@ export const DraggableNode = ({ type, label }) => {
         style={{ 
           cursor: 'grab', 
           minWidth: '80px', 
-          height: '60px',
+          height: '40px', // slightly shorter
+          padding: '0 15px',
           display: 'flex', 
           alignItems: 'center', 
-          borderRadius: '8px',
-          backgroundColor: '#1C2536',
+          borderRadius: '20px', // Pill shape
+          backgroundColor: '#ffffff',
+          border: '1px solid #6366f1', // Indigo border
+          color: '#6366f1', // Indigo text
+          fontWeight: '500',
+          fontSize: '14px',
           justifyContent: 'center', 
-          flexDirection: 'column'
+          boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+          transition: 'all 0.2s ease'
         }} 
         draggable
       >
-          <span style={{ color: '#fff' }}>{label}</span>
+          <span>{label}</span>
       </div>
     );
   };
-  
