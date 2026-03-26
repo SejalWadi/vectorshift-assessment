@@ -1,38 +1,42 @@
 // textNode.js
 
 import { useState, useRef, useEffect } from 'react';
-import { Position } from 'reactflow';
+import { Position, useUpdateNodeInternals } from 'reactflow';
 import { BaseNode } from './baseNode';
 
 export const TextNode = ({ id, data }) => {
   const [currText, setCurrText] = useState(data?.text || '{{input}}');
   const [variables, setVariables] = useState([]);
   const textAreaRef = useRef(null);
+  
+  // 1. Hook to tell React Flow when handles change
+  const updateNodeInternals = useUpdateNodeInternals();
 
-  // Effect to handle both Auto-Resizing and Variable Extraction
+  // Effect to handle Auto-Resizing and Variable Extraction
   useEffect(() => {
-    // 1. EXTRACT VARIABLES using Regex
-    // This regex looks for {{, optional spaces, valid JS variable name, optional spaces, }}
     const regex = /\{\{\s*([a-zA-Z_$][a-zA-Z0-9_$]*)\s*\}\}/g;
     const matches = [...currText.matchAll(regex)];
     const extractedVariables = matches.map(match => match[1]);
-    
-    // Remove duplicates so we don't render multiple handles for the same variable
     const uniqueVariables = [...new Set(extractedVariables)];
-    setVariables(uniqueVariables);
+    
+    // Only update state if the variables actually changed to prevent infinite loops
+    if (JSON.stringify(uniqueVariables) !== JSON.stringify(variables)) {
+      setVariables(uniqueVariables);
+    }
 
-    // 2. AUTO-RESIZE TEXTAREA
+    // Auto-resize logic
     if (textAreaRef.current) {
-      // Temporarily reset dimensions to calculate true scroll size
       textAreaRef.current.style.height = 'auto';
       textAreaRef.current.style.width = 'auto';
-      
-      // Apply new scroll dimensions
       textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
-      // We add a tiny buffer (10px) to the width to prevent text from wrapping awkwardly while typing
       textAreaRef.current.style.width = `${Math.max(180, textAreaRef.current.scrollWidth + 10)}px`;
     }
-  }, [currText]);
+  }, [currText, variables]);
+
+  // 2. Tell React Flow to update its internal node state whenever 'variables' changes
+  useEffect(() => {
+    updateNodeInternals(id);
+  }, [variables, id, updateNodeInternals]);
 
   const handleTextChange = (e) => {
     setCurrText(e.target.value);
@@ -47,7 +51,6 @@ export const TextNode = ({ id, data }) => {
       type: 'target',
       position: Position.Left,
       id: `${id}-${variable}`,
-      // Calculate 'top' percentage so handles are spaced evenly along the left edge
       style: { top: `${((index + 1) * 100) / (variables.length + 1)}%` }
     });
   });
@@ -62,8 +65,8 @@ export const TextNode = ({ id, data }) => {
           value={currText} 
           onChange={handleTextChange} 
           style={{ 
-            resize: 'none', // Prevent manual dragging to resize
-            overflow: 'hidden', // Hide scrollbars
+            resize: 'none', 
+            overflow: 'hidden', 
             minHeight: '40px',
             minWidth: '180px',
             fontFamily: 'inherit'
