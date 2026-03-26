@@ -25,6 +25,16 @@ export const useStore = create((set, get) => ({
             nodes: [...get().nodes, node]
         });
     },
+    // Add this inside useStore = create((set, get) => ({ ...
+    
+    deleteNode: (nodeId) => {
+      set({
+        nodes: get().nodes.filter((node) => node.id !== nodeId),
+        edges: get().edges.filter(
+          (edge) => edge.source !== nodeId && edge.target !== nodeId
+        ),
+      });
+    },
     onNodesChange: (changes) => {
       set({
         nodes: applyNodeChanges(changes, get().nodes),

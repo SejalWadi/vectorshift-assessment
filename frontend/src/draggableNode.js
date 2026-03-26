@@ -1,4 +1,6 @@
-export const DraggableNode = ({ type, label }) => {
+// draggableNode.js
+
+export const DraggableNode = ({ type, label, icon }) => {
     const onDragStart = (event, nodeType) => {
       const appData = { nodeType }
       event.target.style.cursor = 'grabbing';
@@ -13,24 +15,25 @@ export const DraggableNode = ({ type, label }) => {
         onDragEnd={(event) => (event.target.style.cursor = 'grab')}
         style={{ 
           cursor: 'grab', 
-          minWidth: '80px', 
-          height: '40px', // slightly shorter
-          padding: '0 15px',
+          width: '72px', 
+          height: '72px',
           display: 'flex', 
+          flexDirection: 'column',
           alignItems: 'center', 
-          borderRadius: '20px', // Pill shape
-          backgroundColor: '#ffffff',
-          border: '1px solid #6366f1', // Indigo border
-          color: '#6366f1', // Indigo text
-          fontWeight: '500',
-          fontSize: '14px',
           justifyContent: 'center', 
-          boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-          transition: 'all 0.2s ease'
+          borderRadius: '8px',
+          backgroundColor: '#ffffff',
+          border: '1px solid #e5e7eb',
+          color: '#374151',
+          boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+          transition: 'all 0.2s ease',
+          gap: '6px'
         }} 
         draggable
       >
-          <span>{label}</span>
+          {/* Using simple text/emojis to simulate their SVG icons */}
+          <div style={{ fontSize: '20px' }}>{icon}</div>
+          <span style={{ fontSize: '12px', fontWeight: '500' }}>{label}</span>
       </div>
     );
   };

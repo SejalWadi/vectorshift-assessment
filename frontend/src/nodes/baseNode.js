@@ -1,46 +1,61 @@
 // baseNode.js
 
 import { Handle } from 'reactflow';
+import { useStore } from '../store'; // Import the store
 
-export const BaseNode = ({ id, label, children, handles }) => {
+export const BaseNode = ({ id, label, children, handles, icon }) => {
+  // Grab the delete action from our store
+  const deleteNode = useStore((state) => state.deleteNode);
+
   return (
     <div 
       style={{ 
-        minWidth: 220, 
+        minWidth: 260, 
         width: 'fit-content',
-        minHeight: 80, 
         backgroundColor: '#ffffff',
-        borderRadius: '12px', 
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        border: '1px solid #e5e7eb',
+        borderRadius: '10px', 
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+        border: '1px solid #c4b5fd', 
         display: 'flex',
         flexDirection: 'column',
-        // We removed overflow: 'hidden' here so the handles are fully clickable!
       }}
     >
       {/* Node Header */}
       <div 
         style={{ 
-          backgroundColor: '#6366f1', 
-          color: 'white',
-          padding: '8px 12px',
+          backgroundColor: '#ede9fe', 
+          color: '#4c1d95', 
+          padding: '10px 14px',
+          borderTopLeftRadius: '9px',
+          borderTopRightRadius: '9px',
+          borderBottom: '1px solid #c4b5fd',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           fontWeight: '600',
-          fontSize: '14px',
-          boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-          // We added rounded corners directly to the header to keep it looking clean
-          borderTopLeftRadius: '11px',
-          borderTopRightRadius: '11px'
+          fontSize: '15px',
         }}
       >
-        {label}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {icon && <span style={{ fontSize: '18px' }}>{icon}</span>}
+          <span>{label}</span>
+        </div>
+        
+        {/* ADDED onClick HANDLER HERE */}
+        <span 
+          onClick={() => deleteNode(id)} 
+          style={{ color: '#8b5cf6', cursor: 'pointer', fontSize: '16px' }}
+        >
+          ⊗
+        </span>
       </div>
       
       {/* Node Content Body */}
-      <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
         {children}
       </div>
 
-      {/* Render Handles dynamically */}
+      {/* Render Handles */}
       {handles && handles.map((h, index) => (
         <Handle
           key={`${id}-handle-${index}`}
@@ -48,11 +63,10 @@ export const BaseNode = ({ id, label, children, handles }) => {
           position={h.position}
           id={h.id}
           style={{
-            width: '12px', // Made slightly larger to grab easily
-            height: '12px',
-            backgroundColor: '#818cf8', 
-            border: '2px solid white',
-            boxShadow: '0 0 2px rgba(0,0,0,0.3)',
+            width: '14px', 
+            height: '14px',
+            backgroundColor: '#ffffff', 
+            border: '2px solid #6366f1', 
             ...h.style 
           }}
         />
